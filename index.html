@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#111113" media="(prefers-color-scheme: dark)">
+    <title>AP Calculus Review</title>
+    <meta name="description" content="Free AP Calculus AB/BC review with step-by-step solutions. Practice differential equations, integration, parametric, polar, and volumes of revolution.">
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+            options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Header -->
+        <header class="site-header">
+            <div class="header-inner">
+                <div class="brand">
+                    <span class="brand-mark">AP</span>
+                    <div class="brand-text">
+                        <h1>AP Calculus Review</h1>
+                        <p class="brand-sub">AB & BC Exam Prep</p>
+                    </div>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span class="toggle-track">
+                        <span class="toggle-thumb"></span>
+                    </span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Nav -->
+        <nav class="main-nav">
+            <button class="nav-btn active" data-tab="practice">Practice</button>
+            <button class="nav-btn" data-tab="custom">Build a Set</button>
+            <button class="nav-btn" data-tab="strategies">Strategies</button>
+            <button class="nav-btn" data-tab="review">Cheat Sheet</button>
+            <button class="nav-btn" data-tab="about">About</button>
+        </nav>
+
+        <!-- Practice Tab -->
+        <main id="tab-practice" class="tab-panel active">
+            <section class="controls-section">
+                <div class="filter-row">
+                    <label class="filter-item">
+                        <span class="filter-name">Exam</span>
+                        <select id="examFilter">
+                            <option value="all">All</option>
+                            <option value="AB">AB only</option>
+                            <option value="BC">BC (incl. AB)</option>
+                        </select>
+                    </label>
+                    <label class="filter-item">
+                        <span class="filter-name">Topic</span>
+                        <select id="topicFilter">
+                            <option value="all">All topics</option>
+                            <option value="separable">Separable DEs</option>
+                            <option value="slope-fields">Slope Fields</option>
+                            <option value="eulers">Euler's Method</option>
+                            <option value="exponential">Exp. Growth/Decay</option>
+                            <option value="logistic">Logistic Growth</option>
+                            <option value="ivp">IVPs</option>
+                            <option value="modeling">Modeling</option>
+                            <option value="u-sub">U-Substitution</option>
+                            <option value="by-parts">Integration by Parts</option>
+                            <option value="parametric">Parametric Equations</option>
+                            <option value="polar">Polar Coordinates</option>
+                            <option value="volumes">Volumes of Revolution</option>
+                        </select>
+                    </label>
+                    <label class="filter-item">
+                        <span class="filter-name">Level</span>
+                        <select id="difficultyFilter">
+                            <option value="all">Any</option>
+                            <option value="1">Easy</option>
+                            <option value="2">Medium</option>
+                            <option value="3">Hard</option>
+                        </select>
+                    </label>
+                </div>
+                <button id="generateBtn" class="generate-btn">Next Problem <span class="arrow">→</span></button>
+            </section>
+
+            <article id="problemCard" class="problem-card">
+                <header class="card-header">
+                    <div class="card-tags">
+                        <span class="pill pill-exam" id="examBadge"></span>
+                        <span class="pill pill-topic" id="topicBadge"></span>
+                        <span class="pill pill-diff" id="diffBadge"></span>
+                    </div>
+                    <span class="card-number" id="problemNumber"></span>
+                </header>
+                <div id="problemVisual" class="visual-area"></div>
+                <div id="problemText" class="problem-body"></div>
+                <div class="card-actions">
+                    <button id="hintBtn" class="action-btn hint-btn" style="display:none;">Hint</button>
+                    <button id="solutionBtn" class="action-btn solution-btn" style="display:none;">Show Solution</button>
+                    <button id="infoBtn" class="action-btn info-btn" style="display:none;">AP Info</button>
+                </div>
+                <div id="infoArea" class="info-popover" style="display:none;"></div>
+                <div id="hintArea" class="reveal-box hint-reveal" style="display:none;"></div>
+                <div id="solutionArea" class="reveal-box solution-reveal" style="display:none;"></div>
+            </article>
+
+            <footer class="session-stats">
+                <div class="stat-item">
+                    <span class="stat-val" id="totalAttempted">0</span>
+                    <span class="stat-desc">seen</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-val" id="solutionsViewed">0</span>
+                    <span class="stat-desc">solved</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-val" id="topicsCovered">0</span>
+                    <span class="stat-desc">topics</span>
+                </div>
+            </footer>
+        </main>
+
+        <!-- Custom Tab -->
+        <section id="tab-custom" class="tab-panel">
+            <div class="builder-section">
+                <h2>Build Your Own Set</h2>
+                <p class="section-intro">Configure a custom problem set by topic, difficulty, and exam level.</p>
+                <div class="builder-form">
+                    <div class="form-row">
+                        <label class="form-field">
+                            <span class="field-label">Topics</span>
+                            <select id="customTopic">
+                                <option value="">Everything</option>
+                                <option value="separable">Separable DEs</option>
+                                <option value="slope-fields">Slope Fields</option>
+                                <option value="eulers">Euler's Method</option>
+                                <option value="exponential">Exp. Growth/Decay</option>
+                                <option value="logistic">Logistic Growth</option>
+                                <option value="ivp">IVPs</option>
+                                <option value="modeling">Modeling</option>
+                                <option value="u-sub">U-Substitution</option>
+                                <option value="by-parts">Integration by Parts</option>
+                                <option value="parametric">Parametric Equations</option>
+                                <option value="polar">Polar Coordinates</option>
+                                <option value="volumes">Volumes of Revolution</option>
+                            </select>
+                        </label>
+                        <label class="form-field">
+                            <span class="field-label">Exam</span>
+                            <select id="customExam">
+                                <option value="">AB & BC</option>
+                                <option value="AB">AB only</option>
+                                <option value="BC">BC (incl. AB)</option>
+                            </select>
+                        </label>
+                        <label class="form-field">
+                            <span class="field-label">Difficulty</span>
+                            <select id="customDifficulty">
+                                <option value="">Mixed</option>
+                                <option value="1">Easy</option>
+                                <option value="2">Medium</option>
+                                <option value="3">Hard</option>
+                            </select>
+                        </label>
+                        <label class="form-field">
+                            <span class="field-label"># Problems</span>
+                            <select id="customCount">
+                                <option value="5">5</option>
+                                <option value="10" selected>10</option>
+                                <option value="15">15</option>
+                                <option value="20">20</option>
+                            </select>
+                        </label>
+                    </div>
+                    <button id="buildSetBtn" class="generate-btn">Generate Set</button>
+                </div>
+            </div>
+            <div id="customResults" class="custom-results"></div>
+        </section>
+
+        <!-- Review Tab -->
+        <section id="tab-review" class="tab-panel">
+            <h2>Cheat Sheet</h2>
+            <p class="section-intro">Key formulas and patterns for the AP Calculus exam.</p>
+            <div class="review-grid" id="reviewCards"></div>
+        </section>
+
+        <!-- Strategies Tab -->
+        <section id="tab-strategies" class="tab-panel">
+            <div class="strategies-page">
+                <h2>AP Exam Strategies</h2>
+                <p class="section-intro">Common patterns, scoring tips, and pitfalls for the AP Calculus exam.</p>
+
+                <div class="strategy-accordion">
+
+                    <details class="strategy-group" open>
+                        <summary class="strategy-heading">Before You Solve: Read the Problem Right</summary>
+                        <div class="strategy-content">
+                            <ul class="strategy-list">
+                                <li><strong>Identify the type first.</strong> Spend 5 seconds classifying: separable? linear? logistic? This determines your entire approach.</li>
+                                <li><strong>Circle what they're asking for.</strong> "Find k" is different from "find y(t)" is different from "find the time when..." — don't solve for more than you need.</li>
+                                <li><strong>Check for initial conditions.</strong> If they give you \(y(0) = 5\), you'll need it after integrating. Don't lose it in the algebra.</li>
+                                <li><strong>Note the units.</strong> If the problem says "minutes" but asks for "hours," that conversion is often worth a point.</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <details class="strategy-group">
+                        <summary class="strategy-heading">The #1 Trap: Forgetting the Constant</summary>
+                        <div class="strategy-content">
+                            <p class="strategy-callout">Every year, thousands of students lose points by forgetting +C or applying the initial condition incorrectly.</p>
+                            <ul class="strategy-list">
+                                <li><strong>Always write +C immediately</strong> after integrating both sides. Don't "plan to add it later."</li>
+                                <li><strong>Apply IC before solving for y.</strong> It's often easier to find C while the equation is still in implicit form.</li>
+                                <li><strong>If you get \(\ln|y| = \ldots + C\)</strong>, then \(y = \pm e^C \cdot e^{\ldots}\). Replace \(\pm e^C\) with a single constant \(A\), then use the IC to find \(A\).</li>
+                                <li><strong>Don't drop absolute values carelessly.</strong> If \(y(0) > 0\) and the solution stays positive, you can drop \(|\;|\). State why.</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <details class="strategy-group">
+                        <summary class="strategy-heading">Separable DEs: The Fast Track</summary>
+                        <div class="strategy-content">
+                            <ul class="strategy-list">
+                                <li><strong>Test: can you write it as \(g(y)\,dy = f(x)\,dx\)?</strong> If yes, it's separable. If not, try factoring first.</li>
+                                <li><strong>Common disguises:</strong> \(e^{x-y} = e^x \cdot e^{-y}\) and \(\frac{xy+x}{y^2} = \frac{x(y+1)}{y^2}\). Factor before separating.</li>
+                                <li><strong>Don't forget to separate the dy and dx.</strong> Write it as two integrals, then integrate each side independently.</li>
+                                <li><strong>State the domain.</strong> If your solution has \(\ln(x)\), note \(x > 0\). This is often worth a point on free-response.</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <details class="strategy-group">
+                        <summary class="strategy-heading">Slope Fields: What Graders Look For</summary>
+                        <div class="strategy-content">
+                            <ul class="strategy-list">
+                                <li><strong>Check where slopes are zero.</strong> Set \(dy/dx = 0\) — this gives you horizontal segments. These are the easiest to verify.</li>
+                                <li><strong>Check where slopes are undefined.</strong> Vertical tangents or asymptotic behavior.</li>
+                                <li><strong>"Depends only on x" vs "depends only on y":</strong> If \(dy/dx = f(x)\), all segments in a vertical column are parallel. If \(dy/dx = g(y)\), all segments in a horizontal row are parallel.</li>
+                                <li><strong>When sketching a solution curve:</strong> Start at the IC, follow the flow, and make sure your curve is tangent to the segments — not cutting through them.</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <details class="strategy-group">
+                        <summary class="strategy-heading">Euler's Method: Don't Lose Easy Points (BC)</summary>
+                        <div class="strategy-content">
+                            <ul class="strategy-list">
+                                <li><strong>It's just repeated addition:</strong> \(y_{n+1} = y_n + h \cdot f(x_n, y_n)\). Set up a table with columns for \(x_n\), \(y_n\), \(f(x_n,y_n)\), and \(h \cdot f\).</li>
+                                <li><strong>Show every step.</strong> Graders give partial credit for the table even if your final answer is wrong due to arithmetic.</li>
+                                <li><strong>Common trap:</strong> Using the NEW y-value to compute the next slope (that's the improved Euler method, not what they're asking for).</li>
+                                <li><strong>Underestimate or overestimate?</strong> If the curve is concave up, Euler's method underestimates. Concave down = overestimates. They love asking this.</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <details class="strategy-group">
+                        <summary class="strategy-heading">Exponential Growth/Decay: Instant Recognition</summary>
+                        <div class="strategy-content">
+                            <ul class="strategy-list">
+                                <li><strong>If \(dy/dt = ky\), write \(y = Ce^{kt}\) immediately.</strong> Don't re-derive it. The AP exam rewards speed here.</li>
+                                <li><strong>Growth: \(k > 0\). Decay: \(k < 0\).</strong> Half-life formula: \(t_{1/2} = \frac{\ln 2}{|k|}\).</li>
+                                <li><strong>Newton's Cooling:</strong> \(dT/dt = k(T - T_{env})\). Solution is \(T(t) = T_{env} + (T_0 - T_{env})e^{kt}\) where \(k < 0\).</li>
+                                <li><strong>Two data points → two equations.</strong> Use them to find both \(C\) and \(k\). This is the most common free-response setup.</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <details class="strategy-group">
+                        <summary class="strategy-heading">Logistic Growth: The Three Facts (BC)</summary>
+                        <div class="strategy-content">
+                            <p class="strategy-callout">Almost every logistic question on the BC exam can be answered with these three facts alone:</p>
+                            <ol class="strategy-list strategy-numbered">
+                                <li><strong>Carrying capacity \(L\):</strong> Factor the DE into the form \(kP(1 - P/L)\). The number multiplying the \((1 - \ldots)\) term gives you \(L\).</li>
+                                <li><strong>Fastest growth at \(P = L/2\):</strong> The inflection point of the logistic curve. This is when \(dP/dt\) is maximum.</li>
+                                <li><strong>Solution formula:</strong> \(P(t) = \frac{L}{1 + Ae^{-kt}}\) where \(A = \frac{L - P_0}{P_0}\). You rarely need to derive this — just use it.</li>
+                            </ol>
+                            <p><strong>Trap:</strong> If the DE is given as \(dP/dt = 3P - 0.01P^2\), factor it as \(0.01P(300 - P)\) to read off \(L = 300\) and \(k = 3\).</p>
+                        </div>
+                    </details>
+
+                    <details class="strategy-group">
+                        <summary class="strategy-heading">Free-Response Scoring: How to Maximize Points</summary>
+                        <div class="strategy-content">
+                            <ul class="strategy-list">
+                                <li><strong>Show separation clearly.</strong> Write \(g(y)\,dy = f(x)\,dx\) on its own line. This is typically worth 1 point by itself.</li>
+                                <li><strong>Write the antiderivatives.</strong> Even if you mess up the algebra later, the integration step earns credit.</li>
+                                <li><strong>Include +C and solve for it.</strong> These are usually separate points on the rubric.</li>
+                                <li><strong>Box or underline your final answer.</strong> Make it obvious what you're claiming as the solution.</li>
+                                <li><strong>If stuck, write what you know.</strong> Setting up the DE correctly is often worth 2-3 points even without solving it.</li>
+                                <li><strong>Don't erase work.</strong> Cross it out neatly instead. Graders can give credit for crossed-out work if it's correct.</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <details class="strategy-group">
+                        <summary class="strategy-heading">Common Pitfalls (The "I Knew That" Mistakes)</summary>
+                        <div class="strategy-content">
+                            <ul class="strategy-list">
+                                <li><strong>Integrating \(1/y\) as \(\ln(y)\) instead of \(\ln|y|\).</strong> The absolute value matters unless you can justify \(y > 0\).</li>
+                                <li><strong>Forgetting to distribute after exponentiating.</strong> \(e^{\ln|y|} = |y|\), not \(y\). Handle the \(\pm\) properly.</li>
+                                <li><strong>Mixing up \(dy/dx\) and \(dx/dy\).</strong> Double-check which variable you're solving for.</li>
+                                <li><strong>Euler's method: using \(\Delta x = 1\) when they said \(\Delta x = 0.5\).</strong> Read the step size carefully.</li>
+                                <li><strong>Logistic: confusing \(k\) and \(r\).</strong> In \(dP/dt = rP(1-P/L)\), the growth rate is \(r\), not \(r/L\).</li>
+                                <li><strong>Solving for the general solution when they asked for the particular solution.</strong> Always apply the IC if one is given.</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <details class="strategy-group">
+                        <summary class="strategy-heading">Time Management on Exam Day</summary>
+                        <div class="strategy-content">
+                            <ul class="strategy-list">
+                                <li><strong>DE free-response: budget 15 minutes.</strong> It's usually one of the more straightforward FRQs — don't overthink it.</li>
+                                <li><strong>If you're stuck on separation,</strong> try multiplying/dividing both sides by something. Factor aggressively.</li>
+                                <li><strong>MC questions on DEs:</strong> Often testable by plugging the answer back in. If \(y = e^{2x}\) is an option, check if it satisfies the DE.</li>
+                                <li><strong>Skip and return.</strong> If a DE problem is eating your time, move on. The setup points will still be there when you come back.</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- About Tab -->
+        <section id="tab-about" class="tab-panel">
+            <div class="about-page">
+                <h2>About</h2>
+                <p>A free practice tool for AP Calculus AB & BC. No login required, no ads, no AI-generated solutions. Every problem and solution is hand-written and verified.</p>
+                
+                <h3>How it works</h3>
+                <p>80+ problems covering differential equations, integration techniques, parametric equations, polar coordinates, and volumes of revolution. Each problem includes a hint and a full step-by-step solution. Math is rendered with MathJax and all diagrams are inline SVG. The app runs entirely in your browser and works offline once loaded.</p>
+                
+                <h3>What's covered</h3>
+                <dl class="topic-dl">
+                    <dt>Separable DEs</dt><dd>Separation of variables, integration, solving for constants.</dd>
+                    <dt>Slope Fields</dt><dd>Matching DEs to their slope fields, sketching solutions.</dd>
+                    <dt>Euler's Method</dt><dd>Numerical approximation with step-by-step tables. (BC)</dd>
+                    <dt>Exponential Growth & Decay</dt><dd>Populations, radioactivity, Newton's cooling.</dd>
+                    <dt>Logistic Growth</dt><dd>Carrying capacity, inflection at L/2. (BC)</dd>
+                    <dt>Initial Value Problems</dt><dd>Finding particular solutions from general ones.</dd>
+                    <dt>Modeling with DEs</dt><dd>Tanks, falling objects, mixing, and other applied problems.</dd>
+                    <dt>U-Substitution</dt><dd>Reversing the chain rule, change of variable techniques.</dd>
+                    <dt>Integration by Parts</dt><dd>Product rule in reverse, tabular method, cyclic integrals. (BC)</dd>
+                    <dt>Parametric Equations</dt><dd>Derivatives, tangent lines, speed, arc length. (BC)</dd>
+                    <dt>Polar Coordinates</dt><dd>Area, rose curves, lemniscates, polar-rectangular conversion. (BC)</dd>
+                    <dt>Volumes of Revolution</dt><dd>Disk, washer, shell methods; known cross-sections.</dd>
+                </dl>
+
+                <h3>Difficulty calibration</h3>
+                <p><strong>Easy</strong> = one technique, straightforward. <strong>Medium</strong> = careful setup or multiple steps. <strong>Hard</strong> = multi-part, tricky algebra, or combining concepts. Calibrated to match actual AP exam free-response difficulty.</p>
+
+                <h3>Technical details</h3>
+                <p>Built with HTML, CSS, and JavaScript. <a href="https://www.mathjax.org/" target="_blank" rel="noopener">MathJax 3</a> for typesetting. No external dependencies beyond MathJax. No tracking, no cookies beyond theme preference in localStorage.</p>
+            </div>
+        </section>
+    </div>
+
+    <script src="problems.js"></script>
+    <script src="examinfo.js"></script>
+    <script src="visuals.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
